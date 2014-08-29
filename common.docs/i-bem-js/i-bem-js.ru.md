@@ -509,6 +509,60 @@ DOM.decl({ block: 'button', modName: 'type', modVal: 'link' },
 
 -------------------------------------------------------------------------------
 
+### Описание блока с наследованием в декларации
+
+#### Наследование блока
+
+Для наследования от существующего блока необходимо в декларации блока указать зависимость от модуля и присвоить значение базовому блоку (`baseBlock`). Значением выступает имя родительского блока. 
+
+```js
+modules.define('ablock', ['i-bem__dom'], function(provide, BEMDOM) {
+
+provide(BEMDOM.decl(this.name, {}));
+
+});
+
+modules.define('bblock', ['i-bem__dom', 'ablock'], function(provide, BEMDOM, ABlock) {
+
+provide(BEMDOM.decl({ block : this.name, baseBlock : ABlock ));
+
+});
+```
+#### Наследование блока с другого уровня
+
+Для расширения функциональности блока, определенного на другом уровне, нужно в декларации блока доопределить необходимые методы или модификаторы. 
+
+```js
+modules.define('ablock', ['i-bem__dom'], function(provide, BEMDOM) {
+
+provide(BEMDOM.decl(this.name, {}));
+
+});
+
+modules.define('ablock', function(provide, ABlock) {
+
+provide(ABlock.decl({}));
+
+});
+```
+#### Добавление модификатора в существующий блок
+
+Для кастомизации конкретного блока без влияния на поведение всех таких блоков необходимо в существующий блок доопределить модификатор. 
+
+```js
+modules.define('ablock', ['i-bem__dom'], function(provide, BEMDOM) {
+
+provide(BEMDOM.decl(this.name, {}));
+
+});
+
+modules.define('ablock', function(provide, ABlock) {
+
+provide(ABlock.decl({ modName : 'm1', modVal : 'v1' }, {}));
+
+});
+```
+
 ### Описание блока-микса в декларации
 
 Чтобы подмешать к блоку один или несколько блоков-миксов, нужно в описании блока присвоить значение опциональному полю `baseMix`.  Значением должен выступать массив имен, примешиваемых блоков-миксов:
